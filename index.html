@@ -193,11 +193,17 @@
             overflow: hidden;
         }
 
+        /* 正常显示各个视频 */
         .product-card video {
             width: 100%;
             aspect-ratio: 16/9;
-            object-fit: cover;
+            object-fit: cover; 
             border-bottom: 1px solid var(--border-color);
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover video {
+            transform: scale(1.05); 
         }
 
         .product-info {
@@ -214,79 +220,7 @@
             font-size: 0.9rem;
         }
 
-        .pricing-section {
-            background: var(--bg-color);
-        }
-
-        .price-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 40px 30px;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .price-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-        }
-
-        .price-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-
-        .price {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
-
-        .price span {
-            font-size: 1rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .price-features {
-            list-style: none;
-            margin-bottom: 30px;
-            flex: 1;
-        }
-
-        .price-features li {
-            margin-bottom: 15px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-        }
-
-        .price-features li::before {
-            content: "✓";
-            color: var(--accent-color);
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        .btn-outline {
-            width: 100%;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--text-color);
-            background: transparent;
-            color: var(--text-color);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-outline:hover {
-            background: var(--text-color);
-            color: var(--bg-color);
-        }
-
+        /* --- Team --- */
         .team-grid {
             display: flex;
             justify-content: center;
@@ -374,15 +308,13 @@
         <a href="#" class="logo">Futurio</a>
         <div class="nav-links">
             <a href="#product">Product</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#team">Team</a>
             <a href="#contact">Contact</a>
         </div>
     </header>
 
     <section class="hero">
         <video autoplay loop muted playsinline id="hero-video-bg">
-            <source src="showcase1.mp4" type="video/mp4">
+            <source src="hero-bg.mp4" type="video/mp4">
         </video>
         
         <div class="hero-content">
@@ -403,56 +335,31 @@
         </div>
         <div class="grid-layout">
             <div class="product-card">
-                <video autoplay loop muted playsinline><source src="showcase1.mp4" type="video/mp4"></video>
+                <video autoplay loop muted playsinline>
+                    <source src="showcase1.mp4" type="video/mp4">
+                </video>
                 <div class="product-info">
                     <h3>Text to 2D Animation</h3>
                     <p>Convert scripts directly into stylized animation with maintained temporal consistency.</p>
                 </div>
             </div>
             <div class="product-card">
-                <video autoplay loop muted playsinline><source src="showcase1.mp4" type="video/mp4"></video>
+                <video autoplay loop muted playsinline>
+                    <source src="showcase2.mp4" type="video/mp4">
+                </video>
                 <div class="product-info">
                     <h3>Voice Cloning Integration</h3>
                     <p>Natively sync generated 2D character lip movements with custom trained audio models.</p>
                 </div>
             </div>
             <div class="product-card">
-                <video autoplay loop muted playsinline><source src="showcase1.mp4" type="video/mp4"></video>
+                <video autoplay loop muted playsinline>
+                    <source src="showcase3.mp4" type="video/mp4">
+                </video>
                 <div class="product-info">
                     <h3>Automated Pipeline</h3>
                     <p>API access to orchestrate text-to-speech, rendering, and compositing in one workflow.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="pricing" class="section pricing-section">
-        <div class="section-header">
-            <h2>Simple, Scalable Pricing</h2>
-            <p>Designed for creators and digital studios.</p>
-        </div>
-        <div class="grid-layout" style="max-width: 900px;">
-            <div class="price-card">
-                <h3>Creator</h3>
-                <div class="price">$29<span>/mo</span></div>
-                <ul class="price-features">
-                    <li>300 API credits per month</li>
-                    <li>Standard 2D animation models</li>
-                    <li>720p video export</li>
-                    <li>Community support</li>
-                </ul>
-                <button class="btn-outline">Start Free Trial</button>
-            </div>
-            <div class="price-card" style="border-color: var(--accent-color);">
-                <h3>Studio</h3>
-                <div class="price">$199<span>/mo</span></div>
-                <ul class="price-features">
-                    <li>Custom open-source model fine-tuning</li>
-                    <li>Uncapped generation length</li>
-                    <li>4K export & unwatermarked</li>
-                    <li>Priority GPU access</li>
-                </ul>
-                <button class="btn-outline" style="background: var(--text-color); color: var(--bg-color);">Get Studio</button>
             </div>
         </div>
     </section>
