@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futurio Tech - AI Video Generation Pipeline</title>
+    <link rel="icon" href="https://ui-avatars.com/api/?name=F&background=000&color=fff&rounded=true" type="image/x-icon">
+    
+    <style>
+        :root {
+            --bg-color: #000000;
+            --bg-secondary: #0a0a0a;
+            --text-color: #ffffff;
+            --text-muted: #a1a1aa;
+            --accent-color: #3b82f6; 
+            --accent-hover: #60a5fa;
+            --border-color: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Navigation --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-color);
+        }
+
+        /* --- Hero Section & Email Registration --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        #hero-video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            object-fit: cover;
+            filter: brightness(0.4);
+        }
+
+        .hero-content {
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        /* 邮箱注册表单 */
+        .email-signup {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .email-signup input {
+            flex: 1;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-size: 1rem;
+            backdrop-filter: blur(5px);
+            outline: none;
+        }
+
+        .email-signup input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .email-signup button {
+            padding: 15px 35px;
+            border-radius: 30px;
+            border: none;
+            background: var(--text-color);
+            color: var(--bg-color);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .email-signup button:hover {
+            background: var(--accent-hover);
+            color: var(--text-color);
+        }
+
+        /* --- Sections Shared Layout --- */
+        .section {
+            padding: 120px 20px;
+            background: var(--bg-secondary);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* --- Product Showcase --- */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .product-card video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .product-info {
+            padding: 25px;
+        }
+
+        .product-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .product-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- Pricing --- */
+        .pricing-section {
+            background: var(--bg-color);
+        }
+
+        .price-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .price-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .price-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .price-features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex: 1;
+        }
+
+        .price-features li {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+        }
+
+        .price-features li::before {
+            content: "✓";
+            color: var(--accent-color);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .btn-outline {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--text-color);
+            background: transparent;
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-outline:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+
+        /* --- Team --- */
+        .team-grid {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .team-member {
+            text-align: center;
+            max-width: 250px;
+        }
+
+        .team-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-color);
+        }
+
+        .team-member h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .team-member .title {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .team-member p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- Contact & Footer --- */
+        footer {
+            background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            padding: 60px 20px 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 60px;
+        }
+
+        .footer-col h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-col p {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .nav-links { display: none; }
+            .email-signup { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">Futurio</a>
+        <div class="nav-links">
+            <a href="#product">Product</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#team">Team</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <video autoplay loop muted playsinline id="hero-video-bg">
+            <source src="hero-bg.mp4" type="video/mp4">
+        </video>
+        
+        <div class="hero-content">
+            <h1>The New Era of Video Creation</h1>
+            <p>Automated pipeline for AI video generation. Combining 2D animation technologies with open-source machine learning models.</p>
+            
+            <form class="email-signup" onsubmit="event.preventDefault(); alert('Thanks for joining the waitlist! We will be in touch soon.');">
+                <input type="email" placeholder="Enter your email to join the beta" required>
+                <button type="submit">Join Waitlist</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="product" class="section">
+        <div class="section-header">
+            <h2>Generative Capabilities</h2>
+            <p>High-fidelity video rendering powered by custom compute engines.</p>
+        </div>
+        <div class="grid-layout">
+            <div class="product-card">
+                <video autoplay loop muted playsinline><source src="showcase1.mp4" type="video/mp4"></video>
+                <div class="product-info">
+                    <h3>Text to 2D Animation</h3>
+                    <p>Convert scripts directly into stylized animation with maintained temporal consistency.</p>
+                </div>
+            </div>
+            <div class="product-card">
+                <video autoplay loop muted playsinline><source src="showcase2.mp4" type="video/mp4"></video>
+                <div class="product-info">
+                    <h3>Voice Cloning Integration</h3>
+                    <p>Natively sync generated 2D character lip movements with custom trained audio models.</p>
+                </div>
+            </div>
+            <div class="product-card">
+                <video autoplay loop muted playsinline><source src="showcase3.mp4" type="video/mp4"></video>
+                <div class="product-info">
+                    <h3>Automated Pipeline</h3>
+                    <p>API access to orchestrate text-to-speech, rendering, and compositing in one workflow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section pricing-section">
+        <div class="section-header">
+            <h2>Simple, Scalable Pricing</h2>
+            <p>Designed for creators and digital studios.</p>
+        </div>
+        <div class="grid-layout" style="max-width: 900px;">
+            <div class="price-card">
+                <h3>Creator</h3>
+                <div class="price">$29<span>/mo</span></div>
+                <ul class="price-features">
+                    <li>300 API credits per month</li>
+                    <li>Standard 2D animation models</li>
+                    <li>720p video export</li>
+                    <li>Community support</li>
+                </ul>
+                <button class="btn-outline">Start Free Trial</button>
+            </div>
+            <div class="price-card" style="border-color: var(--accent-color);">
+                <h3>Studio</h3>
+                <div class="price">$199<span>/mo</span></div>
+                <ul class="price-features">
+                    <li>Custom open-source model fine-tuning</li>
+                    <li>Uncapped generation length</li>
+                    <li>4K export & unwatermarked</li>
+                    <li>Priority GPU access</li>
+                </ul>
+                <button class="btn-outline" style="background: var(--text-color); color: var(--bg-color);">Get Studio</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="section">
+        <div class="section-header">
+            <h2>The Team Behind Futurio</h2>
+            <p>Engineers building the next generation of digital content tools.</p>
+        </div>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="https://ui-avatars.com/api/?name=Jarred&background=3b82f6&color=fff&size=200" alt="Jarred" class="team-avatar">
+                <h3>Jarred</h3>
+                <div class="title">Founder & CEO</div>
+                <p>Leading cloud architecture and generative AI pipelines to redefine digital content creation.</p>
+            </div>
+            <div class="team-member">
+                <img src="https://ui-avatars.com/api/?name=Alex+C&background=27272a&color=fff&size=200" alt="Alex" class="team-avatar">
+                <h3>Alex C.</h3>
+                <div class="title">Head of Machine Learning</div>
+                <p>Specializing in open-source 2D animation models and scalable GPU compute optimization.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Futurio Tech</h4>
+                <p>Building the automated pipeline for AI video generation.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p>Email: jarred@futurio.tech</p>
+                <p>Support: support@futurio.tech</p>
+            </div>
+            <div class="footer-col">
+                <h4>Headquarters</h4>
+                <p>300 Northeast 2nd Avenue</p>
+                <p>Miami, FL 33132</p>
+                <p>United States</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Futurio Tech. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
